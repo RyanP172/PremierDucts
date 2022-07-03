@@ -1,0 +1,47 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  #register {
+    width: 400px;
+  }
+
+  #control {
+    border:2px solid #000;
+    padding:10px; 
+    margin:10px; 
+    background-color: rgb(33, 37, 39); 
+    
+
+
+  }
+  
+  input {
+    padding: 3px;
+    box-shadow: 3px 3px 5px grey;
+    font-size: 14px;
+    font-weight: 600;
+    width: 300px;
+  }
+
+ label {
+    color: #B4886B;
+    font-weight: bold;
+    display: block;
+  }
+ label:after { content: ": " }
+
+
+ button:focus {
+  outline: 2px solid gray;
+  font-weight: bold;
+  box-shadow: 3px 3px 5px grey;
+  color: rgb(16, 2, 2);
+}
+#my-data {
+    border:2px solid #000;
+    padding:10px; 
+    margin:10px; 
+    background-color: rgb(183, 247, 196); 
+}
+

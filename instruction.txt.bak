@@ -1,0 +1,7 @@
+--1. change port 3306 to 3307 in the config button: myini
+--2. Go to xampp/phpMyadmin/config.inc, add 
+$cfg['Servers'][$i]['port'] = '3307';
+
+--3. in node js, instal mysql2 instead of mysql: npm i mysql2
+reason: https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server/50131831#50131831
+--4. Add port: 3307 in the connection method as we changed 3306 to 3307
