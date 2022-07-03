@@ -96,31 +96,26 @@ app.post('/stations',(req,res) => {
     })
 });
 
-// For pool initialization, see above
-// pool.getConnection(function(err, conn) {
-//     // Do something with the connection
-//     if (err) {
-//     return console.error('error: '+ err.message);
-//     }
-//     console.log('Connected to the MySql Server');
-//     //conn.query(/* ... */);
-//     // Don't forget to release the connection when finished!
-//     pool.releaseConnection(conn);
-//  })
-// connection.connect(function(err) {
-//     if (err) {
-//         return console.error('error: '+ err.message);
+app.post('/date',(req,res) => {
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        let dateSearch = req.body;        
+        connection.query('select DISTINCT `jobno`, `jobday`, `stationNo`, `storageInfo` from `jobtiming` where `jobday` = ? AND `jobno` NOT LIKE "%valid%" AND `jobno` NOT LIKE "%on%" AND `jobno` NOT LIKE "%out%" ORDER BY `jobday` DESC LIMIT 20', [dateSearch.jobday], (err, rows) => {
+             connection.release() // return the connection to pool
 
-//     }
-//     console.log('Connected to the MySql Server');
-// });
+            if (!err) {
+                
+                res.json(rows)
+            } else {
+                console.log(err)
+            }
+            console.log('The data from Job Timming table are: \n', rows)    
 
-// connection.end(function(err){
-//     if(err) {
-//         return console.error('error: '+ err.message);
-//     }
-//     console.log('Close the database connection');
-// })
+                      
+        })
+    })
+});
+
 
 
 app.listen(3000,() => {
