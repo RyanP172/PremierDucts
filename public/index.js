@@ -49,6 +49,8 @@ document.getElementById("jobNo").addEventListener('click', () => {
         })
         .catch(error => alert(error))
 
+    document.getElementById("job_number").value ='';
+
 });
 
 
@@ -82,6 +84,8 @@ document.getElementById("stationNo").addEventListener('click', () => {
         })
         .catch(error => alert(error))
 
+    document.getElementById("station_id").value ='';
+
 }); 
 
 document.getElementById("date").addEventListener('click', () => {
@@ -113,5 +117,45 @@ document.getElementById("date").addEventListener('click', () => {
 
         })
         .catch(error => alert(error))
+
+
+    document.getElementById("day").value ='';
+
+}); 
+
+
+document.getElementById("station_on_date").addEventListener('click', () => {
+    debugger
+    let data = {
+        jobday: document.getElementById("day_station").value,
+        stationNo:document.getElementById("station_day").value
+    };
+
+    let options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    };
+    //http post method
+    fetch('/datestation', options)
+        .then(res => res.json())
+        .then(json => {
+
+            document.getElementById("my-data").innerHTML = ''; //empty the element
+            for (let u of json) {
+
+                document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} 
+                        &nbsp;&nbsp;&nbsp;&nbsp; Date: ${u.jobday}
+                        &nbsp;&nbsp;&nbsp;&nbsp; Station: ${u.stationNo}
+                        &nbsp;&nbsp;&nbsp;&nbsp; Storage: ${u.storageInfo}</p>`
+                // document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} </p>`
+
+            }
+
+        })
+        .catch(error => alert(error))
+
+
+    //document.getElementById("day").value ='';
 
 }); 

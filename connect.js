@@ -116,6 +116,26 @@ app.post('/date',(req,res) => {
     })
 });
 
+app.post('/datestation',(req,res) => {
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        let dateStationSearch = req.body;        
+        connection.query('select DISTINCT `jobno`, `jobday`, `stationNo`, `storageInfo` from `jobtiming` where `jobday` = ? AND `stationNo` = ? AND `jobno` NOT LIKE "%valid%" AND `jobno` NOT LIKE "%on%" AND `jobno` NOT LIKE "%out%" ORDER BY `jobday` DESC LIMIT 20', [dateStationSearch.jobday,dateStationSearch.stationNo], (err, rows) => {
+             connection.release() // return the connection to pool
+
+            if (!err) {
+                
+                res.json(rows)
+            } else {
+                console.log(err)
+            }
+            console.log('The data from Job Timming table are: \n', rows)    
+
+                      
+        })
+    })
+});
+
 
 
 app.listen(3000,() => {
