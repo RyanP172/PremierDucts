@@ -1,24 +1,26 @@
-
-const fs = require('fs'); 
-const path = require('path');
+const fs = require('fs');
 const express = require('express');
-const bodyParser = require('body-parser'); 
-
-
+const bodyParser = require('body-parser');
 var http = require('http');
-// var https = require('https');
-// var privateKey  = fs.readFileSync('certificates/key.pem', 'utf8');
-// var certificate = fs.readFileSync('certificates/cert.pem', 'utf8');
-// var credentials = {key: privateKey, cert: certificate};
-
-
-
+const https = require('https');
 const app = express(); 
-// your express configuration here
 
-var httpServer = http.createServer(app);
-// var httpsServer = https.createServer(credentials, app);
+//For server
+ 
+// Certificate
+// const privateKey = fs.readFileSync('/etc/letsencrypt/live/tu.y.fo/privkey.pem', 'utf8');
+// const certificate = fs.readFileSync('/etc/letsencrypt/live/tu.y.fo/cert.pem', 'utf8');
+// const ca = fs.readFileSync('/etc/letsencrypt/live/tu.y.fo/chain.pem', 'utf8');
 
+// const credentials = {
+// 	key: privateKey,
+// 	cert: certificate,
+// 	ca: ca
+// };
+
+// Starting both http & https servers
+// const httpServer = http.createServer(app);
+// const httpsServer = https.createServer(credentials, app);
 const port = process.env.PORT || 3000;
 
 let mysql = require('mysql2');
@@ -27,27 +29,10 @@ let mysql = require('mysql2');
 // app.use(express.json()); // New
 
 
-//app.use(express.static('public')); 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public')); 
 app.use(bodyParser.json()); 
 
 
-
-
-
-// this connection is for live server
-// const pool = mysql.createPool({
-//     host: 'localhost',
-//     user: 'tupham',
-//     database: 'premierductsnsw',
-//     password: 'tupham@NSW2566',
-//     waitForConnections: true,
-//     connectionLimit: 10,
-//     queueLimit: 0,
-//     //port: 3306
-//   });
-
-// Create the connection pool. The pool-specific settings are the defaults
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
@@ -58,6 +43,18 @@ const pool = mysql.createPool({
     queueLimit: 0,
     port: 3307
   });
+
+// Create the connection pool. The pool-specific settings are the defaults
+// const pool = mysql.createPool({
+//     host: 'localhost',
+//     user: 'tupham',
+//     database: 'premierductsnsw',
+//     password: 'tupham@NSW2566',
+//     waitForConnections: true,
+//     connectionLimit: 10,
+//     queueLimit: 0,
+//     //port: 3306
+//   });
 
 
 
@@ -159,15 +156,13 @@ app.post('/datestation',(req,res) => {
     })
 });
 
-
-
-// app.listen(port,() => {
+// httpsServer.listen(port,() => {
+//     console.log('the web server has started on port:', port); 
+// }); 
+// httpServer.listen(port,() => {
 //     console.log('the web server has started on port:', port); 
 // }); 
 
-
-
-// For http
-httpServer.listen(port);
-// For https
-// httpsServer.listen(8443);
+app.listen(port,() => {
+   console.log('the web server has started on port', port);
+});
