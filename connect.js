@@ -1,10 +1,25 @@
+
+const fs = require('fs'); 
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser'); 
 
-const fs = require('fs'); 
+
+var http = require('http');
+// var https = require('https');
+// var privateKey  = fs.readFileSync('certificates/key.pem', 'utf8');
+// var certificate = fs.readFileSync('certificates/cert.pem', 'utf8');
+// var credentials = {key: privateKey, cert: certificate};
+
+
 
 const app = express(); 
-// const port = process.env.PORT || 5000;
+// your express configuration here
+
+var httpServer = http.createServer(app);
+// var httpsServer = https.createServer(credentials, app);
+
+const port = process.env.PORT || 3000;
 
 let mysql = require('mysql2');
 
@@ -12,17 +27,25 @@ let mysql = require('mysql2');
 // app.use(express.json()); // New
 
 
-app.use(express.static('public')); 
+//app.use(express.static('public')); 
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json()); 
 
 
-// let connection = mysql.createConnection({
+
+
+
+// this connection is for live server
+// const pool = mysql.createPool({
 //     host: 'localhost',
-//     user: 'root',
-//     password: '',
-//     database: 'nsw',
-//     port: 3307
-// });
+//     user: 'tupham',
+//     database: 'premierductsnsw',
+//     password: 'tupham@NSW2566',
+//     waitForConnections: true,
+//     connectionLimit: 10,
+//     queueLimit: 0,
+//     //port: 3306
+//   });
 
 // Create the connection pool. The pool-specific settings are the defaults
 const pool = mysql.createPool({
@@ -41,7 +64,7 @@ const pool = mysql.createPool({
 app.get('/jobs', (req, res) => {    
     pool.getConnection((err, connection) => {
         if (err) throw err;       
-        connection.query('select DISTINCT `jobno`, `jobday`, `stationNo`, `storageInfo` from `jobtiming` where `jobno` NOT LIKE "%valid%" AND `jobno` NOT LIKE "%on%" AND `jobno` NOT LIKE "%out%" ORDER BY `jobday` DESC LIMIT 20' , (err, rows) => {
+        connection.query('select distinct j.*,s.stationName from jobtiming j left join stationManagement s on s.stationNo=j.stationNo where j.jobno not like "%valid%" and j.jobno not like "%on%" and j.jobno not like "%out%" order by STR_TO_DATE(j.jobday,"%d/%m/%Y") desc,j.jobtime desc' , (err, rows) => {
             connection.release(); // return the connection to pool
             if (!err) {
                 
@@ -60,7 +83,7 @@ app.post('/jobs',(req,res) => {
     pool.getConnection((err, connection) => {
         if (err) throw err;
         let jobSearch = req.body;        
-        connection.query('select DISTINCT `jobno`, `jobday`, `stationNo`, `storageInfo` from `jobtiming` where `jobno` = ? ORDER BY `jobday` DESC', [jobSearch.jobno], (err, rows) => {
+        connection.query('select distinct j.*,s.stationName from jobtiming j left join stationManagement s on s.stationNo=j.stationNo where j.jobno = ? order by STR_TO_DATE(j.jobday,"%d/%m/%Y") desc,j.jobtime desc' ,[jobSearch.jobno], (err, rows) => {
              connection.release() // return the connection to pool
 
             if (!err) {
@@ -80,7 +103,7 @@ app.post('/stations',(req,res) => {
     pool.getConnection((err, connection) => {
         if (err) throw err;
         let stationSearch = req.body;        
-        connection.query('select DISTINCT `jobno`, `jobday`, `stationNo`, `storageInfo` from `jobtiming` where `stationNo` = ? AND `jobno` NOT LIKE "%valid%" AND `jobno` NOT LIKE "%on%" AND `jobno` NOT LIKE "%out%" ORDER BY `jobday` DESC LIMIT 20', [stationSearch.stationNo], (err, rows) => {
+        connection.query('select distinct j.*,s.stationName from jobtiming j left join stationManagement s on s.stationNo=j.stationNo where j.stationNo = ? and j.jobno not like "%valid%" and j.jobno not like "%on%" and j.jobno not like "%out%" order by STR_TO_DATE(j.jobday,"%d/%m/%Y") desc,j.jobtime desc' ,[stationSearch.stationNo], (err, rows) => {
              connection.release() // return the connection to pool
 
             if (!err) {
@@ -100,7 +123,7 @@ app.post('/date',(req,res) => {
     pool.getConnection((err, connection) => {
         if (err) throw err;
         let dateSearch = req.body;        
-        connection.query('select DISTINCT `jobno`, `jobday`, `stationNo`, `storageInfo` from `jobtiming` where `jobday` = ? AND `jobno` NOT LIKE "%valid%" AND `jobno` NOT LIKE "%on%" AND `jobno` NOT LIKE "%out%" ORDER BY `jobday` DESC LIMIT 20', [dateSearch.jobday], (err, rows) => {
+        connection.query('select distinct j.*,s.stationName from jobtiming j left join stationManagement s on s.stationNo=j.stationNo where j.jobday = ? and j.jobno not like "%valid%" and j.jobno not like "%on%" and j.jobno not like "%out%" order by STR_TO_DATE(j.jobday,"%d/%m/%Y") desc,j.jobtime desc' ,[dateSearch.jobday], (err, rows) => {
              connection.release() // return the connection to pool
 
             if (!err) {
@@ -120,7 +143,7 @@ app.post('/datestation',(req,res) => {
     pool.getConnection((err, connection) => {
         if (err) throw err;
         let dateStationSearch = req.body;        
-        connection.query('select DISTINCT `jobno`, `jobday`, `stationNo`, `storageInfo` from `jobtiming` where `jobday` = ? AND `stationNo` = ? AND `jobno` NOT LIKE "%valid%" AND `jobno` NOT LIKE "%on%" AND `jobno` NOT LIKE "%out%" ORDER BY `jobday` DESC LIMIT 20', [dateStationSearch.jobday,dateStationSearch.stationNo], (err, rows) => {
+        connection.query('select distinct j.*,s.stationName from jobtiming j left join stationManagement s on s.stationNo=j.stationNo where j.jobday = ? and j.stationNo = ? and j.jobno not like "%valid%" and j.jobno not like "%on%" and j.jobno not like "%out%" order by STR_TO_DATE(j.jobday,"%d/%m/%Y") desc,j.jobtime desc ' ,[dateStationSearch.jobday,dateStationSearch.stationNo], (err, rows) => {
              connection.release() // return the connection to pool
 
             if (!err) {
@@ -138,6 +161,13 @@ app.post('/datestation',(req,res) => {
 
 
 
-app.listen(3000,() => {
-    console.log('the web server has started on port 3000'); 
-}); 
+// app.listen(port,() => {
+//     console.log('the web server has started on port:', port); 
+// }); 
+
+
+
+// For http
+httpServer.listen(port);
+// For https
+// httpsServer.listen(8443);

@@ -1,22 +1,10 @@
-document.getElementById('test').addEventListener('click', () => {
-    //debugger
-    fetch('/jobs')//make background request   
-        .then(res => res.json())
-        .then(json => {
-
-            document.getElementById("my-data").innerHTML = ''; //empty the element
-            for (let u of json) {
-
-                document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} 
-                &nbsp;&nbsp;&nbsp;&nbsp; Date: ${u.jobday}
-                &nbsp;&nbsp;&nbsp;&nbsp; Station: ${u.stationNo}
-                &nbsp;&nbsp;&nbsp;&nbsp; Storage: ${u.storageInfo}</p>`
-                // document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} </p>`
-
-            }
-
-        })
-
+var input = document.getElementById('job_number');
+input.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        document.getElementById("jobNo").click();
+    }
+       
 });
 
 document.getElementById("jobNo").addEventListener('click', () => {
@@ -35,16 +23,22 @@ document.getElementById("jobNo").addEventListener('click', () => {
         .then(res => res.json())
         .then(json => {
 
-            document.getElementById("my-data").innerHTML = ''; //empty the element
-            for (let u of json) {
+            let placeHolder = document.querySelector("#data-output");
+            let out = "";
 
-                document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} 
-                    &nbsp;&nbsp;&nbsp;&nbsp; Date: ${u.jobday}
-                    &nbsp;&nbsp;&nbsp;&nbsp; Station: ${u.stationNo}
-                    &nbsp;&nbsp;&nbsp;&nbsp; Storage: ${u.storageInfo}</p>`
-                // document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} </p>`
-
+            for(let u of json) {
+                out +=`
+                    <tr>
+                        <td>${u.jobno}</td>
+                        <td>${u.jobday}</td>
+                        <td>${u.jobtime}</td>
+                        <td>${u.stationName}</td>
+                        <td>${u.storageInfo}</td>
+                        <td>${u.operatorID}</td>
+                    </tr>
+                `;
             }
+            placeHolder.innerHTML = out;
 
         })
         .catch(error => alert(error))
@@ -53,6 +47,52 @@ document.getElementById("jobNo").addEventListener('click', () => {
 
 });
 
+
+
+
+
+
+
+
+
+document.getElementById('test').addEventListener('click', () => {
+    //debugger
+    fetch('/jobs')//make background request   
+        .then(res => res.json())
+        .then(json => {
+            //debugger
+
+            let placeHolder = document.querySelector("#data-output");
+            let out = "";
+
+            for(let u of json) {
+                out +=`
+                    <tr>
+                        <td>${u.jobno}</td>
+                        <td>${u.jobday}</td>
+                        <td>${u.jobtime}</td>
+                        <td>${u.stationName}</td>
+                        <td>${u.storageInfo}</td>
+                        <td>${u.operatorID}</td>
+                    </tr>
+                `;
+            }
+            placeHolder.innerHTML = out;
+            
+
+        })
+
+});
+
+
+var input = document.getElementById('station_id');
+input.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        document.getElementById("stationNo").click();
+    }
+       
+});
 
 document.getElementById("stationNo").addEventListener('click', () => {
     //debugger
@@ -70,23 +110,40 @@ document.getElementById("stationNo").addEventListener('click', () => {
         .then(res => res.json())
         .then(json => {
 
-            document.getElementById("my-data").innerHTML = ''; //empty the element
-            for (let u of json) {
+            let placeHolder = document.querySelector("#data-output");
+            let out = "";
 
-                document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} 
-                        &nbsp;&nbsp;&nbsp;&nbsp; Date: ${u.jobday}
-                        &nbsp;&nbsp;&nbsp;&nbsp; Station: ${u.stationNo}
-                        &nbsp;&nbsp;&nbsp;&nbsp; Storage: ${u.storageInfo}</p>`
-                // document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} </p>`
-
+            for(let u of json) {
+                out +=`
+                    <tr>
+                        <td>${u.jobno}</td>
+                        <td>${u.jobday}</td>
+                        <td>${u.jobtime}</td>
+                        <td>${u.stationName}</td>
+                        <td>${u.storageInfo}</td>
+                        <td>${u.operatorID}</td>
+                    </tr>
+                `;
             }
+            placeHolder.innerHTML = out;
 
         })
         .catch(error => alert(error))
 
     document.getElementById("station_id").value ='';
 
-}); 
+});
+
+
+var input = document.getElementById('day');
+debugger;
+input.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        document.getElementById("date").click();
+    }
+       
+});
 
 document.getElementById("date").addEventListener('click', () => {
     debugger
@@ -104,16 +161,22 @@ document.getElementById("date").addEventListener('click', () => {
         .then(res => res.json())
         .then(json => {
 
-            document.getElementById("my-data").innerHTML = ''; //empty the element
-            for (let u of json) {
+            let placeHolder = document.querySelector("#data-output");
+            let out = "";
 
-                document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} 
-                        &nbsp;&nbsp;&nbsp;&nbsp; Date: ${u.jobday}
-                        &nbsp;&nbsp;&nbsp;&nbsp; Station: ${u.stationNo}
-                        &nbsp;&nbsp;&nbsp;&nbsp; Storage: ${u.storageInfo}</p>`
-                // document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} </p>`
-
+            for(let u of json) {
+                out +=`
+                    <tr>
+                        <td>${u.jobno}</td>
+                        <td>${u.jobday}</td>
+                        <td>${u.jobtime}</td>
+                        <td>${u.stationName}</td>
+                        <td>${u.storageInfo}</td>
+                        <td>${u.operatorID}</td>
+                    </tr>
+                `;
             }
+            placeHolder.innerHTML = out;
 
         })
         .catch(error => alert(error))
@@ -122,6 +185,16 @@ document.getElementById("date").addEventListener('click', () => {
     document.getElementById("day").value ='';
 
 }); 
+
+
+var input = document.getElementById('station_day');
+input.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        document.getElementById("station_on_date").click();
+    }
+       
+});
 
 
 document.getElementById("station_on_date").addEventListener('click', () => {
@@ -141,16 +214,22 @@ document.getElementById("station_on_date").addEventListener('click', () => {
         .then(res => res.json())
         .then(json => {
 
-            document.getElementById("my-data").innerHTML = ''; //empty the element
-            for (let u of json) {
+            let placeHolder = document.querySelector("#data-output");
+            let out = "";
 
-                document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} 
-                        &nbsp;&nbsp;&nbsp;&nbsp; Date: ${u.jobday}
-                        &nbsp;&nbsp;&nbsp;&nbsp; Station: ${u.stationNo}
-                        &nbsp;&nbsp;&nbsp;&nbsp; Storage: ${u.storageInfo}</p>`
-                // document.getElementById("my-data").innerHTML += `<p>job no: ${u.jobno} </p>`
-
+            for(let u of json) {
+                out +=`
+                    <tr>
+                        <td>${u.jobno}</td>
+                        <td>${u.jobday}</td>
+                        <td>${u.jobtime}</td>
+                        <td>${u.stationName}</td>
+                        <td>${u.storageInfo}</td>
+                        <td>${u.operatorID}</td>
+                    </tr>
+                `;
             }
+            placeHolder.innerHTML = out;
 
         })
         .catch(error => alert(error))
